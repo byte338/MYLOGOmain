@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>Responsive Website with Navbar, Slider, Contact & Footer</title>
+<style>
+  /* Reset & base */
+  * {
+    box-sizing: border-box;
+    margin: 0; padding: 0;
+  }
+  body, html {
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f9fafb;
+    color: #222;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  /* Navbar */
+  nav.navbar {
+    background: #1e40af;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 1.2rem;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+  }
+  nav .logo {
+    font-weight: 900;
+    font-size: 1.5rem;
+    letter-spacing: 0.1em;
+    cursor: default;
+    user-select: none;
+  }
+  nav .menu-button {
+    display: none;
+    font-size: 2rem;
+    cursor: pointer;
+    user-select: none;
+  }
+  nav ul.menu {
+    list-style: none;
+    display: flex;
+  }
+  nav ul.menu li {
+    margin-left: 1.5rem;
+  }
+  nav ul.menu li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 0.3rem 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  nav ul.menu li a:hover, nav ul.menu li a:focus {
+    background-color: #3b82f6;
+    outline: none;
+  }
+
+  /* Responsive menu for mobile */
+  @media (max-width: 768px) {
+    nav .menu-button {
+      display: block;
+    }
+    nav ul.menu {
+      position: absolute;
+      top: 56px;
+      left: 0;
+      right: 0;
+      background-color: #1e40af;
+      flex-direction: column;
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.3s ease;
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+    }
+    nav ul.menu.active {
+      max-height: 300px; /* enough for 4 items */
+    }
+    nav ul.menu li {
+      margin: 0;
+      border-top: 1px solid #3b82f6;
+      text-align: center;
+      padding: 0.5rem 0;
+    }
+  }
+
+  /* Main container flex to take full remaining space */
+  main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem 1.5rem 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  /* IMAGE SLIDER */
+  .slider {
+    position: relative;
+    width: 100%;
+    max-width: 700px;
+    height: 350px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    margin-bottom: 2rem;
+  }
+  .slides {
+    height: 100%;
+    position: relative;
+  }
+  .slide {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    transition: opacity 0.7s ease-in-out;
+  }
+  .slide.active {
+    opacity: 1;
+    position: relative;
+  }
+  .slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+  }
+  /* Navigation buttons */
+  .slider button.prev, .slider button.next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(30,64,175,0.8);
+    border: none;
+    color: white;
+    font-size: 2rem;
+    padding: 0.2rem 0.6rem;
+    cursor: pointer;
+    border-radius: 50%;
+    user-select: none;
+    transition: background-color 0.3s ease;
+  }
+  .slider button.prev:hover, .slider button.next:hover {
+    background-color: #3b82f6;
+  }
+  .slider button.prev { left: 12px; }
+  .slider button.next { right: 12px; }
+
+  /* CONTACT FORM */
+  form.contact-form {
+    width: 100%;
+    max-width: 700px;
+    background: white;
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+  }
+  form.contact-form h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+    color: #1e40af;
+  }
+  form.contact-form label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    color: #1e40af;
+  }
+  form.contact-form input,
+  form.contact-form textarea {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    margin-bottom: 1rem;
+    border: 2px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+    font-family: inherit;
+    resize: vertical;
+  }
+  form.contact-form input:focus,
+  form.contact-form textarea:focus {
+    border-color: #3b82f6;
+    outline: none;
+  }
+  form.contact-form button {
+    background-color: #1e40af;
+    color: white;
+    font-weight: 700;
+    border: none;
+    padding: 0.7rem 1.5rem;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+  }
+  form.contact-form button:hover {
+    background-color: #3b82f6;
+  }
+  form.contact-form .error {
+    color: #ef4444;
+    font-size: 0.9rem;
+    margin-top: -0.8rem;
+    margin-bottom: 0.8rem;
+  }
+  form.contact-form .success-message {
+    color: #22c55e;
+    font-weight: 700;
+    margin-top: 1rem;
+    text-align: center;
+  }
+
+  /* FOOTER */
+  footer.footer {
+    background-color: #1e40af;
+    color: white;
+    text-align: center;
+    padding: 1.5rem 1rem;
+    font-size: 0.9rem;
+    user-select: none;
+    flex-shrink: 0;
+  }
+  footer.footer .footer-content {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  footer.footer .footer-logo {
+    font-weight: 900;
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.1em;
+  }
+  footer.footer .contact-info {
+    margin-bottom: 0.5rem;
+  }
+  footer.footer .social-media {
+    margin-top: 0.5rem;
+  }
+  footer.footer .social-media a {
+    color: white;
+    margin: 0 0.8rem;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+  }
+  footer.footer .social-media a:hover {
+    color: #93c5fd;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 600px) {
+    nav ul.menu li {
+      margin: 0;
+      border-top: 1px solid #3b82f6;
+      padding: 0.6rem 0;
+    }
+    .slider {
+      height: 250px;
+    }
+    form.contact-form {
+      padding: 1.2rem 1.5rem;
+    }
+  }
+
+  @media (max-height: 600px) {
+    .slider {
+      height: 200px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" role="navigation" aria-label="Main Navigation">
+  <div class="logo" aria-label="Company Logo">MyLogo</div>
+  <div class="menu-button" id="menu-button" aria-label="Toggle menu" role="button" tabindex="0">&#9776;</div>
+  <ul class="menu" id="menu" role="menu">
+    <li role="none"><a href="#slider" role="menuitem" tabindex="-1">Home</a></li>
+    <li role="none"><a href="#contact" role="menuitem" tabindex="-1">Contact</a></li>
+    <li role="none"><a href="#about" role="menuitem" tabindex="-1">About</a></li>
+    <li role="none"><a href="#services" role="menuitem" tabindex="-1">Services</a></li>
+  </ul>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main>
+  <!-- IMAGE SLIDER -->
+  <section class="slider" aria-label="Image Slider" id="slider">
+    <div class="slides">
+      <div class="slide active" aria-hidden="false">
+        <img src="https://picsum.photos/id/1015/700/350" alt="Mountain landscape" />
+      </div>
+      <div class="slide" aria-hidden="true">
+        <img src="https://picsum.photos/id/1025/700/350" alt="Dog close-up" />
+      </div>
+      <div class="slide" aria-hidden="true">
+        <img src="https://picsum.photos/id/1039/700/350" alt="Bridge over water" />
+      </div>
+    </div>
+    <button class="prev" aria-label="Previous slide" id="prev-slide">&#10094;</button>
+    <button class="next" aria-label="Next slide" id="next-slide">&#10095;</button>
+  </section>
+
+  <!-- CONTACT FORM -->
+  <section id="contact" style="width: 100%; margin-top: 3rem;">
+    <form class="contact-form" id="contact-form" novalidate>
+      <h2>Contact Us</h2>
+      <label for="name">Name *</label>
+      <input type="text" id="name" name="name" required aria-required="true" aria-describedby="name-error" />
+      <div class="error" id="name-error" aria-live="assertive"></div>
+
+      <label for="email">Email *</label>
+      <input type="email" id="email" name="email" required aria-required="true" aria-describedby="email-error" />
+      <div class="error" id="email-error" aria-live="assertive"></div>
+
+      <label for="message">Message *</label>
+      <textarea id="message" name="message" rows="5" required aria-required="true" aria-describedby="message-error"></textarea>
+      <div class="error" id="message-error" aria-live="assertive"></div>
+
+      <button type="submit" aria-live="polite" aria-label="Submit contact form">Send Message</button>
+      <div class="success-message" id="success-message" aria-live="polite"></div>
+    </form>
+  </section>
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-content">
+    <div class="footer-logo" aria-label="Company Logo">MyLogo</div>
+    <div class="contact-info">© 2025 My Company. Contact: info@try.com</div>
+    <div class="social-media" aria-label="Social media links">
+      <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook">Facebook</a>
+      <a href="https://twitter.com" target="_blank" rel="noopener" aria-label="Twitter">Twitter</a>
+      <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram">Instagram</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Navbar menu toggle for mobile
+  const menuButton = document.getElementById('menu-button');
+  const menu = document.getElementById('menu');
+  const menuLinks = menu.querySelectorAll('a');
+
+  // Toggle menu method
+  function toggleMenu() {
+    menu.classList.toggle('active');
+    // Set tabindex for menu items for accessibility
+    if (menu.classList.contains('active')) {
+      menuLinks.forEach(link => link.tabIndex = 0);
+    } else {
+      menuLinks.forEach(link => link.tabIndex = -1);
+    }
+  }
+  menuButton.addEventListener('click', toggleMenu);
+  menuButton.addEventListener('keypress', e => {
+    if(e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      toggleMenu();
+    }
+  });
+  // Initially set menu links tabindex -1 for accessibility in mobile
+  if(window.innerWidth <= 768){
+    menuLinks.forEach(link => link.tabIndex = -1);
+  }
+
+  // IMAGE SLIDER LOGIC
+  let slideIndex = 0;
+  const slides = document.querySelectorAll('.slide');
+  const prevBtn = document.getElementById('prev-slide');
+  const nextBtn = document.getElementById('next-slide');
+  let slideInterval;
+
+  function showSlide(index) {
+    slides.forEach((slide, i) => {
+      slide.classList.toggle('active', i === index);
+      slide.setAttribute('aria-hidden', i !== index);
+    });
+    slideIndex = index;
+  }
+
+  function changeSlide(change) {
+    let newIndex = slideIndex + change;
+    if(newIndex < 0) newIndex = slides.length - 1;
+    if(newIndex >= slides.length) newIndex = 0;
+    showSlide(newIndex);
+  }
+
+  prevBtn.addEventListener('click', () => {
+    changeSlide(-1);
+    resetInterval();
+  });
+  nextBtn.addEventListener('click', () => {
+    changeSlide(1);
+    resetInterval();
+  });
+
+  // Auto slide every 5 seconds
+  function autoSlide() {
+    slideIndex++;
+    if(slideIndex >= slides.length) slideIndex = 0;
+    showSlide(slideIndex);
+  }
+  function resetInterval() {
+    clearInterval(slideInterval);
+    slideInterval = setInterval(autoSlide, 5000);
+  }
+  slideInterval = setInterval(autoSlide, 5000);
+
+  // CONTACT FORM VALIDATION AND SUBMISSION
+  const form = document.getElementById('contact-form');
+  const nameInput = form.name;
+  const emailInput = form.email;
+  const messageInput = form.message;
+  const successMessage = document.getElementById('success-message');
+
+  // Validation helpers
+  function validateEmail(email) {
+    // Basic email regex
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  function showError(input, message) {
+    const errorDiv = document.getElementById(input.id + '-error');
+    errorDiv.textContent = message;
+    input.setAttribute('aria-invalid', 'true');
+  }
+  function clearError(input) {
+    const errorDiv = document.getElementById(input.id + '-error');
+    errorDiv.textContent = '';
+    input.removeAttribute('aria-invalid');
+  }
+
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    let valid = true;
+
+    // Name validation
+    if(nameInput.value.trim() === '') {
+      showError(nameInput, 'Please enter your name.');
+      valid = false;
+    } else {
+      clearError(nameInput);
+    }
+
+    // Email validation
+    if(emailInput.value.trim() === '') {
+      showError(emailInput, 'Please enter your email address.');
+      valid = false;
+    } else if (!validateEmail(emailInput.value.trim())) {
+      showError(emailInput, 'Please enter a valid email address.');
+      valid = false;
+    } else {
+      clearError(emailInput);
+    }
+
+    // Message validation
+    if(messageInput.value.trim() === '') {
+      showError(messageInput, 'Please enter your message.');
+      valid = false;
+    } else {
+      clearError(messageInput);
+    }
+
+    if(valid) {
+      // Construct mailto link as fallback:
+      const subject = encodeURIComponent('Contact Form Message from ' + nameInput.value.trim());
+      const body = encodeURIComponent(
+        `Name: ${nameInput.value.trim()}\nEmail: ${emailInput.value.trim()}\n\nMessage:\n${messageInput.value.trim()}`
+      );
+      const mailtoLink = `mailto:mylogo@test.com?subject=${subject}&body=${body}`;
+
+      // Show success message
+      successMessage.textContent = 'Thank you for contacting us! Your message has been prepared in your email client.';
+
+      // Open email client with populated mailto
+      window.location.href = mailtoLink;
+
+      // Reset form
+      form.reset();
+    } else {
+      successMessage.textContent = '';
+    }
+  });
+</script>
+</body>
+</html>
